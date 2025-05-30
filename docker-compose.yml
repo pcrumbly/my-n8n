@@ -1,0 +1,41 @@
+version: '3.7'
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    restart: always
+    ports:
+      - "5678:5678"                   # Exposes n8n’s UI & API
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true    # Enable basic auth
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+      - N8N_HOST=your.domain.com      # Your public domain
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - WEBHOOK_TUNNEL_URL=https://your.domain.com/
+    volumes:
+      - ./n8n-data:/home/node/.n8n   # Persist workflows, credentials, settings
+
+# Optional: Traefik reverse‐proxy
+# (if you prefer routing via HTTPS and automatic Let's Encrypt)
+#  traefik:
+#    image: traefik:v2.8
+#    ports:
+#      - "80:80"
+#      - "443:443"
+#    command:
+#      - "--providers.docker=true"
+#      - "--entrypoints.web.address=:80"
+#      - "--entrypoints.websecure.address=:443"
+#      - "--certificatesResolvers.le.acme.httpChallenge.entryPoint=web"
+#      - "--certificatesResolvers.le.acme.email=you@domain.com"
+#      - "--certificatesResolvers.le.acme.storage=/letsencrypt/acme.json"
+#    volumes:
+#      - /var/run/docker.sock:/var/run/docker.sock
+#      - ./letsencrypt:/letsencrypt
+#    labels:
+#      - "traefik.http.routers.n8n.rule=Host(`your.domain.com`)"
+#      - "traefik.http.routers.n8n.entrypoints=websecure"
+#      - "traefik.http.routers.n8n.tls.certresolver=le"
+#      - "traefik.http.services.n8n.loadbalancer.server.port=5678"
