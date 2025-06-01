@@ -1,0 +1,7 @@
+.env
+n8n-data/nodes/package.json
+n8n-data/n8nEventLog.log
+n8n-data/database.sqlite
+n8n-data/config
+n8n-data/n8nEventLog-1.log
+.env
